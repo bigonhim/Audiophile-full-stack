@@ -1,0 +1,209 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{% static 'css/product.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="website icon" type="image/png"  href="{%  static 'images/logo.png' %}">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <title>product</title>
+</head>
+<body>
+    <header>
+    <li>
+        <svg class="menu" onclick="showSidebar()" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ececec"><path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/></svg>
+        <h3 class="logo">audiophile</h3>
+        <a class="hide" href="{% url 'home' %}"><p>HOME</p></a>
+        <a class="hide" href="{% url 'headphones' %}"><p>HEADPHONES</p></a>
+        <a class="hide" href="{% url 'speakers' %}"><p>SPEAKERS</p></a>
+        <a class="hide" href="{% url 'earphones' %}"><p>EARPHONES</p></a>
+        <div class="cart-container">
+            <a id="cartIcon" class="cart" href="#"><img src="{% static 'images/cart.webp' %}" alt="cart-image"></a>
+            <div class="cartCircle">2</div>
+        </div>
+    </li>
+    </header>
+    <li class="sidebar">
+        <a  class="close"  onclick="closeSidebar()"   href="#"><svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="30px" fill="#ececec"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></a>
+        <a href="{% url 'home' %}"><p>HOME</p></a>
+        <a href="{% url 'headphones' %}"><p>HEADPHONES</p></a>
+        <a href="{% url 'speakers' %}"><p>SPEAKERS</p></a>
+        <a href="{% url 'earphones' %}"><p>EARPHONES</p></a>
+    </li>
+    <div class="cart-box">
+        <img id="close" style="margin-left:13em;" src="{% static 'images/close.svg' %}">
+        <div class="cart-title">
+            <p>CART</p>
+            <p>SUMMARY</p>
+        </div>
+        {%for orderItem in orderItems %}
+            {%  if orderItem.quantity > 0 %}  
+                <div style="display: flex;" class="order-summary">
+                    <img src="{{ orderItem.product_image }}" alt="photo of order picked">
+                    <div class="separate">
+                        <h6>{{ orderItem.product_name}}</h6>
+                        <p style="font-size: .7em;">${{ orderItem.product_price }}</p>
+                    </div>
+                    <div class="cart-sum">
+                        <img src="{% static 'images/add.svg' %}" class="addCartButton" data-target="quantity-{{ forloop.counter }}"  data-product-id="{{ orderItem.product_pk }}">
+                        <p class="current"  id="quantity-{{ forloop.counter }}">{{orderItem.quantity}}</p>
+                        <img src="{% static 'images/remove.svg' %}" class="removeCartButton" data-target="quantity-{{ forloop.counter }}"   data-product-id="{{ orderItem.product_pk }}" >
+                    </div>
+                </div>
+            {% endif %}                
+       {% endfor %}                       
+        <hr>
+        {% for order in orders %}
+        <div class="total-summary">
+            <p>TOTAL</p>
+            <div style="display:flex;" class="flex-total">
+                <p>${{order.orderItemsTotalPrice|floatformat:2}}</p>
+                <p id="totalCurrent"></p>
+            </div>
+        </div>
+        {% endfor %}
+        <div class="button-m">
+            <a class="button" href="{% url 'checkout' %}">CHECKOUT</a>
+        </div>
+    </div> 
+    <div class="productBlurView">
+        <div class="product-overview">
+            <div class="image-photo">
+            <img src="{{product.ImageUrl}}" alt="headphones image">
+            </div>
+            <div class="product-description">
+                <p style="color: brown;">NEW PRODUCT</p>
+                <h2>{{ product.name }}</h2>
+                <p>Upgrade your musical experience with the {{ product.name }} which gives you a taste
+                of music heaven,grab yours today and experience music hennesy</p>
+                <p style="margin-top: 1.5em; font-weight: 700;" >${{product.price}}</p> 
+                <div >
+                    <div class="button-cart" >
+                        <p class="addToCart" 
+                           data-product-id="{{ product.pk }}" 
+                           data-product-image="{{ product.ImageUrl}}" 
+                           data-product-price="{{ product.price }}" 
+                           data-product-name="{{ product.name }}"
+                           >ADD TO CART</p>
+                    </div>
+                </div>
+            </div> 
+        </div>
+
+        <div class="features-box">
+            <div class="features">
+                <div class="paragraph-1">
+                    <h2>FEATURES</h2>
+                    <p>{{product.description}}</p>
+                </div>
+            </div>
+            <div class="inbox">
+                <h2>IN THE BOX</h2>
+                <p>1.EXTRA EAR PADS</p>
+                <p>2.CARRYING CASE</p>
+                <p>3.WARRANTY CARD</p>
+                <p>4.DETACHABLE CABLE</p>
+            </div>
+        </div>
+        <div class="container-product-market">
+            <div class="product-market">
+                    <img src="{% static 'images/manlistening.webp' %}" alt="heaphones image"  class="image ">
+                    <img src="{% static 'images/darkbackgroundheadphones.webp' %}" alt="headphones image" class="image grid-row-span-2">
+                    <img src="{% static 'images/mansurprised.webp' %}" alt="A MAN LISTENING TO MUSIC" class="image">
+            </div>
+        </div>
+        <div class="like">
+        <h3>YOU MAY ALSO LIKE</h3>
+        </div>
+
+            <div class="like-photos">
+                <div class="like1">
+                    <div class="image-background">
+                    <img src="{% static 'images/headphones_5.webp' %}" alt="headphones image">
+                    </div>
+                    <div class="description1">
+                        <h5>BOSE QUIETCOMFORT 35 II</h5>
+                        <a class="button" href="{% url 'headphone_detail'  4 %}">SEE PRODUCT</a>
+                    </div>
+                </div>
+                <div class="like2">
+                    <div class="image-background">
+                    <img src="{% static 'images/headphones_6.webp' %}" alt="headphones image">
+                    </div>
+                    <div class="description2">
+                        <h5>JABRA ELITE 85H</h5>
+                        <a class="button" href="{% url 'headphone_detail'  3 %}">SEE PRODUCT</a>
+                    </div>
+                </div>
+                <div class="like3">
+                    <div class="image-background">
+                    <img src="{% static 'images/speaker_2.webp' %}" alt="speakers image">
+                    </div>
+                    <div class="description3">
+                        <h5>BOSE SOUNDLINK REVOLVE+</h5>
+                        <a class="button" href="{% url 'speaker_detail'  10 %}">SEE PRODUCT</a>
+                    </div>
+                </div>
+            </div>
+            <div class="page-search">
+                
+                <div class="col-headphones">
+                    <img class="image-float" src="{% static 'images/headphones7.webp' %}" alt="headphone image"> 
+                    <p class="col-titles">HEADPHONES</p>
+                    <a href="{% url 'headphones'  %}">SHOP &#8618; </a>
+                </div>
+                <div class="col-speakers">
+                    <img class="image-float" src="{% static 'images/speaker_2.webp' %}" alt="speaker image"> 
+                    <p class="col-titles" >SPEAKERS</p>
+                <a  href="{% url 'speakers' %}"><p>SHOP &#8618;</p></a>
+                </div>
+                <div class="col-earphones">
+                    <img class="image-float" src="{% static 'images/airpods_1.webp' %}" alt="airpods image"> 
+                    <p class="col-titles" >EARPHONES</p>
+                    <a  href="{% url 'earphones' %}"><p>SHOP &#8618;</p></a>
+                </div>
+            </div>
+     
+
+
+
+        <div class="section5">
+            <div class="listenercontent">
+                <h3>BRINGING YOU THE <span class="highlight">BEST</span>  AUDIO GEAR</h3>
+                <p>Welcome to SoundWave Audio, your ultimate destination for top-tier audio gear! Our extensive range of products is meticulously curated to meet the needs of audiophiles and professionals alike. From crystal-clear headphones and powerful speakers to state-of-the-art amplifiers and mixers, every piece of equipment we offer is crafted to deliver unparalleled sound quality</p>
+            </div>
+            <div class="listener">
+                <img src="{% static 'images/manlistening.webp' %}" alt="person listening music">
+            </div>
+        </div>
+    </div> 
+    <div class="footer">
+        <div class="footer1">
+            <h2>audiophile</h2>
+            <p>Discover the difference with SonicWave, where our commitment to excellence ensures you’ll find the perfect gear to suit your unique audio needs. Experience sound like never before with products that are not only state-of-the-art but also crafted to deliver pure auditory bliss.</p>
+        </div>
+        <div class="footer2">
+            <li>
+                <p>HOME</p>
+                <p>HEADPHONES</p>
+                <p>SPEAKERS</p>
+                <p>EARPHONES</p>
+            </li>
+
+        </div>
+    </div>
+    <div class="loader"></div>
+    
+    <script defer src="{% static 'common.js' %}">
+        
+
+    </script>
+    
+</body>
+</html>

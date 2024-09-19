@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="cart-box">
+        <img   id="close" style="margin-left:13em;"  src="{% static 'images/close.svg' %}">
+        <div class="cart-title">
+            <p>CART</p>
+            <p>SUMMARY</p>
+        </div>
+            <div class="order-summary">
+                <img src="{{ orderItem.product.ImageUrl }}" alt="photo of order picked">
+                <div class="separate">
+                    <h6>3</h6>
+                    <p style="font-size: .6em;">$34</p>
+                </div>
+                <div class="cart-sum">
+                    <img src="{% static 'images/add.svg' %}" id="addCart">
+                    <p id="current" style="margin-bottom: 2.4em;">1</p>
+                    <img src="{% static 'images/remove.svg' %}" id="remove">
+                </div>
+            </div>   
+        <hr>
+        {% endfor %}
+        <div class="total-summary">
+            <p>TOTAL</p>
+            <div  style="display:flex;"  class="flex-total">
+                <p>$</p>
+                <p id="totalCurrent" >75.56</p>
+            </div>
+        </div>
+        <div class="button-m">
+        <a class="button" href="{% url 'checkout' %}">CHECKOUT</a>
+        </div>
+    </div>
+    
+    
+</body>
+</html>

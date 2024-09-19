@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<head>
+    <link rel="stylesheet" href="{% static 'css/thankyou.css' %}">
+    <link rel="website icon" type="image/png"  href="{%  static 'images/logo.png' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gracious</title>
+</head>
+<body>
+    <div class="loader"></div>
+    <div class="container">
+        <img src="{% static 'images/check_circle.png' %}" alt="check-circle">
+        <div class="thanks-section">
+            <h2>THANK YOU FOR YOUR ORDER</h2>
+            <p>Welcome again to Audiophile!</p>
+        </div>
+        <div class="two-sections">
+            <div class="section1">
+            <h3>AUDIOPHILE</h3>
+            <p>YOUR ONE STOP SITE</p>
+            </div>
+            <div class="section2">
+                <p>GRACIOUS  <span class="highlight" >MUCHAS</span></p>
+               
+            </div>
+        </div>
+
+        <a class="button" href="{% url 'home' %}">COMPLETE</a>
+
+    </div>
+    <script>
+          window.addEventListener('load',()  =>{
+            const loader = document.querySelector(".loader");
+            loader.classList.add("loader-hidden");
+            loader.addEventListener("transitionend", () =>{
+                document.body.removeChild('loader')
+            })
+        })
+    </script>
+</body>
+</html>
