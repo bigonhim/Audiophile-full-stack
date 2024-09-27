@@ -225,6 +225,17 @@ window.addEventListener('load',()  =>{
        document.body.removeChild('loader')
     })
 })
+(function() {
+    function injectSpeedInsights() {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/@vercel/speed-insights';
+        script.async = true;
+        document.head.appendChild(script);
+    }
+
+    // Call the function to inject Speed Insights when the page loads
+    window.onload = injectSpeedInsights;
+})();
 
 
 
