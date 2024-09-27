@@ -226,15 +226,4 @@ window.addEventListener('load',()  =>{
     })
 })
 
-function injectSpeedInsights() {
-        console.log('Injecting Vercel Speed Insights...');
-        const script = document.createElement('script');
-        script.src = 'https://cdn.jsdelivr.net/npm/@vercel/speed-insights';
-        script.async = true;
-        document.head.appendChild(script);
-    }
-    // Call the function to inject Speed Insights when the page loads
-    window.onload = injectSpeedInsights();
-
-
 
