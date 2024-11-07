@@ -78,128 +78,63 @@ removeButtons.forEach(function(removeButton){
 }); 
 }); 
 
-// jQuery version for addToCartButton event listener
-addToCartButtons.forEach(function(addToCartButton) {
-    $(addToCartButton).on('click', function() {
+addToCartButtons.forEach(function(addToCartButton){
+    addToCartButton.addEventListener('click', function(){
         console.log("Preparing to send data, please be on standby");
-
         let currentCartQuantity = parseInt(cartCircle.textContent);
-        currentCartQuantity += 1;
+        currentCartQuantity  += 1;
         cartCircle.textContent = currentCartQuantity;
-
-        const productId = $(this).data('product-id');
-        const productPrice = parseFloat($(this).data('product-price'));
-        const productName = $(this).data('product-name');
-        const productImage = $(this).data('product-image');
-
+        const productId1 = this.getAttribute('data-product-id');
+        const productId2 = parseInt(productId1); 
+        const productPrice1 = this.getAttribute('data-product-price');
+        const productPrice = parseFloat(productPrice1);
+        const productName = this.getAttribute('data-product-name');
+        const productImage= this.getAttribute('data-product-image');
         const data = {
-            product_id: productId,
+            product_id: productId2,
             product_price: productPrice,
             product_name: productName,
-            product_image: productImage
+            product_image : productImage
         };
-
         console.log("Sending data...");
-
-        $.ajax({
-            url: '/post/', // Your endpoint
+        const url = '/post/';
+        fetch(url, {
             method: 'POST',
             headers: {
-                'X-CSRFToken': getCookie('csrftoken')
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken') 
             },
-            data: JSON.stringify(data),
-            contentType: 'application/json',
-            dataType: 'json',
-            success: function(response) {
-                console.log('Success:', response);
-                
-                // Update or add the quantity in the cart
-                const quantityElement = $(`#quantity-${response.product.pk}`);
-                if (quantityElement.length) {
-                    quantityElement.text(response.quantity);
-                } else {
-                    const cartItemHtml = `
-                        <div class="order-summary">
-                            <img src="${response.product_image}" alt="${response.product_name}">
-                            <div class="separate">
-                                <h6>${response.product_name}</h6>
-                                <p style="font-size: .6em;">$${response.product_price}</p>
-                            </div>
-                            <div class="cart-sum">
-                                <img src="${addImage}" class="addCartButton" data-target="quantity-{{ forloop.counter }}" data-product-id="{{ orderItem.product_pk }}">
-                                <p class="current" id="quantity-${response.product.pk}">${response.quantity}</p>
-                                <img src="${removeImage}" class="removeCartButton" data-target="quantity-{{ forloop.counter }}" data-product-id="{{ orderItem.product_pk }}">
-                            </div>
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())  // Parse the JSON response
+        .then(data => {
+            console.log('Success:', data);  
+            const quantityElement = document.getElementById(`quantity-${data.product.pk}`);
+            if (quantityElement) {
+                quantityElement.textContent = data.quantity;
+            } else {
+                const cartItemHtml = `
+                    <div class="order-summary" >
+                        <img src="${data.product_image}" alt="${data.product_name}">
+                        <div class="separate">
+                            <h6>${data.product_name}</h6>
+                            <p style="font-size: .6em;">$${data.product_price}</p>
                         </div>
-                    `;
-                    $('.order-summary').first().before(cartItemHtml);
-                }
-            },
-            error: function(error) {
-                console.error('Error:', error);
+                        <div class="cart-sum">
+                            <img src="${addImage}" class="addCartButton" data-target="quantity-{{ forloop.counter }}"  data-product-id="{{ orderItem.product_pk }}">
+                            <p class="current" id="quantity-${data.product.pk}">${data.quantity}</p>
+                            <img src="${removeImage}" class="removeCartButton" data-target="quantity-{{ forloop.counter }}"   data-product-id="{{ orderItem.product_pk }}" >
+                        </div>
+                    </div>
+                `;
+                document.querySelector('.order-summary').insertAdjacentHTML('beforeBegin', cartItemHtml);
             }
+        })
+        .catch(error => {
+            console.error('Error:', error);  // Log any errors that occur
         });
     });
-});
-
-
-// addToCartButtons.forEach(function(addToCartButton){
-//     addToCartButton.addEventListener('click', function(){
-//         console.log("Preparing to send data, please be on standby");
-//         let currentCartQuantity = parseInt(cartCircle.textContent);
-//         currentCartQuantity  += 1;
-//         cartCircle.textContent = currentCartQuantity;
-//         const productId1 = this.getAttribute('data-product-id');
-//         const productId2 = parseInt(productId1); 
-//         const productPrice1 = this.getAttribute('data-product-price');
-//         const productPrice = parseFloat(productPrice1);
-//         const productName = this.getAttribute('data-product-name');
-//         const productImage= this.getAttribute('data-product-image');
-//         const data = {
-//             product_id: productId2,
-//             product_price: productPrice,
-//             product_name: productName,
-//             product_image : productImage
-//         };
-//         console.log("Sending data...");
-//         const url = '/post/';
-//         fetch(url, {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//                 'X-CSRFToken': getCookie('csrftoken') 
-//             },
-//             body: JSON.stringify(data)
-//         })
-//         .then(response => response.json())  // Parse the JSON response
-//         .then(data => {
-//             console.log('Success:', data);  
-//             const quantityElement = document.getElementById(`quantity-${data.product.pk}`);
-//             if (quantityElement) {
-//                 quantityElement.textContent = data.quantity;
-//             } else {
-//                 const cartItemHtml = `
-//                     <div class="order-summary" >
-//                         <img src="${data.product_image}" alt="${data.product_name}">
-//                         <div class="separate">
-//                             <h6>${data.product_name}</h6>
-//                             <p style="font-size: .6em;">$${data.product_price}</p>
-//                         </div>
-//                         <div class="cart-sum">
-//                             <img src="${addImage}" class="addCartButton" data-target="quantity-{{ forloop.counter }}"  data-product-id="{{ orderItem.product_pk }}">
-//                             <p class="current" id="quantity-${data.product.pk}">${data.quantity}</p>
-//                             <img src="${removeImage}" class="removeCartButton" data-target="quantity-{{ forloop.counter }}"   data-product-id="{{ orderItem.product_pk }}" >
-//                         </div>
-//                     </div>
-//                 `;
-//                 document.querySelector('.order-summary').insertAdjacentHTML('beforeBegin', cartItemHtml);
-//             }
-//         })
-//         .catch(error => {
-//             console.error('Error:', error);  // Log any errors that occur
-//         });
-//     });
-// })
+})
 
 
 try{
